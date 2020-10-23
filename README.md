@@ -8,7 +8,6 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -206,17 +205,15 @@ To all the people that have contributed to Lua, a simple yet powerful scripting 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/claudix/repo.svg?style=flat-square
-[contributors-url]: https://github.com/claudix/repo/graphs/contributors
+[contributors-url]: https://github.com/claudix/lua-woo/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/claudix/repo.svg?style=flat-square
-[forks-url]: https://github.com/claudix/repo/network/members
+[forks-url]: https://github.com/claudix/lua-woo/network/members
 [stars-shield]: https://img.shields.io/github/stars/claudix/repo.svg?style=flat-square
-[stars-url]: https://github.com/claudix/repo/stargazers
+[stars-url]: https://github.com/claudix/lua-woo/stargazers
 [issues-shield]: https://img.shields.io/github/issues/claudix/repo.svg?style=flat-square
-[issues-url]: https://github.com/claudix/repo/issues
+[issues-url]: https://github.com/claudix/lua-woo/issues
 [license-shield]: https://img.shields.io/github/license/claudix/repo.svg?style=flat-square
-[license-url]: https://github.com/claudix/repo/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/claudix
+[license-url]: https://github.com/claudix/lua-woo/blob/master/LICENSE.txt
 [product-screenshot]: images/screenshot.png
 
 
