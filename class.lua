@@ -75,6 +75,11 @@ end
 local GLOBAL_SCOPE = make_scope()
 
 
+-- Create a class member definition
+-- @param class Class
+-- @param name Member name
+-- @param params Definition parameters
+-- @return Definition
 local function make_member_def(class, name, params)
 	assert(type(params) == 'table', "Invalid member definition; expecting a table, but given a " .. type(params))
 	local def = {
@@ -109,6 +114,12 @@ local function make_member_def(class, name, params)
 	return def
 end
 
+-- Check the access to a member
+-- @param view The state view
+-- @param member_name The member name
+-- @param scope The access scope 
+-- @param write_mode If true, check access for writing
+-- @return The checked member 
 local function check_member_access(view, member_name, scope, write_mode)
 	local class = view.class
 
@@ -137,12 +148,14 @@ local function check_member_access(view, member_name, scope, write_mode)
 	return state_member
 end
 
+-- Overload an operator
 local function overload_operator(op, read_member)
 	return function(...)
 		return read_member(op)(...)
 	end	
 end
 
+-- Create a two-level cache
 local function make_double_cache()
 	local primary = {}
 
@@ -170,6 +183,7 @@ local function make_double_cache()
 	}
 end
 
+-- Create a state of the given class
 local function make_state(class)
 	return {
 		[STATE_ID_KEY] = {},  -- Generate unique state ID
@@ -179,6 +193,7 @@ local function make_state(class)
 	}
 end
 
+-- Create the view of a state by a class
 local function make_state_view(state, class)
 	local view = {
 		state = state,
@@ -189,11 +204,17 @@ local function make_state_view(state, class)
 	return view
 end
 
+-- Check if a state is of a given class
 local function state_is_a(state, test_class)
 	local primary_class = state[STATE_CLASS_KEY] 	
 	return primary_class == test_class or (primary_class[CLASS_ANCESTORS_KEY][test_class] and true or false)
 end
 
+-- Create a state handle (aka instance reference)
+-- @param state State 
+-- @param target_class The class for which the handle is created.
+-- @param target_scope The scope used by the handle.
+-- @return State handle 
 local function make_state_handle(state, target_class, target_scope)
 	if not target_scope then
 		target_scope = target_class[CLASS_SCOPE_KEY]
@@ -304,15 +325,18 @@ local function make_state_handle(state, target_class, target_scope)
 	return handle
 end
 
+-- Cast a state handle to another class
 local function cast_state_handle(handle, target_class)
 	return make_state_handle(handle[HANDLE_STATE_KEY], target_class, handle[HANDLE_SCOPE_KEY])
 end
 
+-- Create a state handle using a different scope
 local function rescope_state_handle(handle, scope)
 	local state = handle[HANDLE_STATE_KEY]				
 	return make_state_handle(state, state[STATE_CLASS_KEY], scope)
 end
 
+-- Create a method caller
 local function make_method_caller(class, method)
 	return function(instance, ...)
 		assert(getmetatable(instance) == STATE_HANDLE_TAG, "Wrong call to method. Methods should be called using ':'")
@@ -334,6 +358,7 @@ local function make_method_caller(class, method)
 	end
 end
 
+-- Create a state member
 local function make_state_member(member_def)
 	local data
 
@@ -351,6 +376,7 @@ local function make_state_member(member_def)
 	}
 end
 
+-- Override a state view member
 local function override_view_member(view_members, member_name, new_member)
 	local current_member = view_members[member_name] 
 
@@ -381,6 +407,7 @@ local function override_view_member(view_members, member_name, new_member)
 	view_members[member_name] = new_member	
 end
 
+-- Create an instance of a class
 function new(__class, ...)
 	assert(getmetatable(__class) == CLASS_HANDLE_TAG, "Argument 1 must be a class")
 
@@ -414,12 +441,17 @@ function new(__class, ...)
 	return make_state_handle(instance_state, class, GLOBAL_SCOPE)
 end
 
+-- Cast an instance to a given class, if possible.
 function cast(instance, __class)
 	assert(getmetatable(instance) == STATE_HANDLE_TAG, "First argument must be an instance")
 	assert(getmetatable(__class) == CLASS_HANDLE_TAG, "Second argument must be a class")
 	return cast_state_handle(instance, __class[CLASS_INNER_KEY])
 end
 
+-- Check if the given argument is an instance of a class.
+-- @param instance Object to test
+-- @param __class If not nil, test if the instance is of the given class.
+-- @param strict If true, class test is done in a strict manner.
 function is_object(instance, __class, strict)
 	if getmetatable(instance) == STATE_HANDLE_TAG then
 		if __class then
@@ -436,23 +468,25 @@ function is_object(instance, __class, strict)
 	return false
 end
 
+-- Check if the given argument is a class 
 function is_class(__class)
 	return getmetatable(__class) == CLASS_HANDLE_TAG
 end
 
-function friend(instance, owner)
+-- Access an instance as a friend
+function friend(instance, key)
 	assert(getmetatable(instance) == STATE_HANDLE_TAG, "First argument must be an instance")
 	local state = instance[HANDLE_STATE_KEY]
 	local class = state[STATE_CLASS_KEY]
 	
-	if class[CLASS_FRIENDS_KEY][owner] then
+	if class[CLASS_FRIENDS_KEY][key] then
 		return make_state_handle(state, class)
 	end
 
 	error("Not a friend of class " .. class.name)
 end
 
-
+-- Create a class
 function class(class_name, __parent, class_attrs)
 	-- The __parent argument is a wrapper (handle) of the actual parent class
 	local parent
@@ -492,7 +526,7 @@ function class(class_name, __parent, class_attrs)
 		[CLASS_MEMBERS_KEY] = {},
 		[CLASS_QUALIFIED_MEMBERS_KEY]	 = {},	 -- A collection of names of qualified members (keys are ancestor class names and values are the corresponding class)
 		[CLASS_PROTECTED_SCOPES_KEY] = {},     -- Allowed scopes for accessing to protected members. Keys are class scopes, values are just "true"
-		[CLASS_FRIENDS_KEY] = friends,         -- Hash of friends. Keys are friend objects and values are "true"  (See function friend())
+		[CLASS_FRIENDS_KEY] = friends,         -- Hash of friends. Keys are friend secret keys, and values are "true"  (See function friend())
 		[CLASS_ANCESTORS_KEY] = {}             -- Hash of ancestors. Keys are ancestor classes and values are "true"
 	}
 

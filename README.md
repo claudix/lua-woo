@@ -69,6 +69,7 @@
 ## Usage
 Just require the script *woo.lua* to your project. The following global symbols will be created:
 
+- class
 - new 
 - cast
 - is_object
@@ -85,7 +86,7 @@ Just require the script *woo.lua* to your project. The following global symbols 
 ### class
 	class(name, parent, attrs)
 
-Defines a new class.
+Defines a new class, returning a class object.
 
 Parameters:
 - **name**: (string) name of the class.
@@ -144,20 +145,113 @@ __add = function(this, b)
 end
 ```
 
-
-
 #### Constructor and destructor
+A class can optionally have a constructor and a destructor function. A constructor is defined using the *ctor* class attribute, which must be a function that takes at least two arguments. The first argument is the instance of the class (*this*) and the second argument is a function that allows the user to invoke the parent class's constructor with specific arguments. The rest of the arguments are those passed to the [*new*](#new) function when the instance is created.
 
+Example:
+
+```
+ctor = function(this, parent_ctor, arg1, arg2)
+	parent_ctor(arg1 + arg2)
+	this.value = arg1
+end
+```
+
+On the other hand, a destructor can be defined using the *dtor* class attribute. This must be a function that only takes 1 argument (the instance, i.e. *this*), which is called when Lua's garbage collector frees the instance when no reference is left.
 
 ### new
 
+	new(class[, ...])
+
+Creates a new instance of the given class.
+
+Parameters:
+- **class**: (class object) a class object created by [class()](#class)
+- ...: optional arguments passed to the constructor, if any.
+
 #### Reading and writing instance's properties
+Access to an instance's properties is done using the usual dot (.) operator. Example:
+
+```
+local prop_value = myinstance.value  -- Reading a property
+myinstance.value = prop_value        -- Writing a property
+
+```
+
+If the scope in which the access is performed is incompatible with the property's access level (private, protected or public), the statement will throw an error. Similarly, any attempt to write a read-only property will also throw an error.
+
 
 #### Calling instance's methods
+Instance methods are called using the colon operator (:). Example:
+
+```
+local result = instance:my_method(arg1, arg2)
+```
+
+If the scope in which the method is called is incompatible with the method's access level (private, protected or public), the statement will throw an error. 
 
 #### Qualified access
+Besides the members defined in a class, an instance also contains some special members (read-only properties) that emulate a cast of that instance into any of the classes it derives from. For example, an instance of a class C, that derives from B, that derives from A, will have two properties named "B" and "A" that allow explicit access to the members of these classes. This acesss is useful when derived classes contain members with the same name but we want to refer to the member of a particular subclass.
 
-### Exception
+Example:
+
+```
+local c = new(C)
+print(c.foo) -- Refers to the effective "foo" member for the class C
+print(C.B.foo) -- Refers to the "foo" member of class B
+print(C.A.foo) -- Refers to the "foo" member of class A 
+```
+
+### cast
+	cast(instance, class)
+
+Casts an instance to a given class. If the cast is not possible, throw an error.
+
+Parameters:
+- **instance**: (object) the instance to cast.
+- **class**: (class object) the class to cast to.
+
+### is_object
+	is_object(arg[, class[, strict]])
+
+Returns true if the given argument is an instance of a class. 
+
+Parameters:
+	- **arg**: value to test.
+	- **class**: if specified, the class to test.
+	- **strict**: if true, the given object's final class is compared against the given class. Otherwise the function will return true if the object's class also derives from the given class.
+
+### is_class
+	is_class(arg)
+
+Returns true if the given argument is a class object.
+
+### friend
+	friend(instance, key)
+
+Create a reference to an instance giving the caller full access to all of the members of its class, as long as the class was defined with the attribute *friends* containing the access key. 
+
+Parameters:
+- **instance**: (object) the instance to access to.
+- **key**: (any value) a value that unlocks full access to the instance's class. This value might be secret by defining a Lua local variable in the script the class is defined in and setting it to a dummy Lua table.
+
+Example:
+
+```
+local SECRET_KEY = {}
+
+MyClass = class('MyClass', nil, {
+	friends = {SECRET_KEY}
+})
+
+function my_friend(instance)
+	print(friend(instance, SECRET_KEY).private_value) 
+end
+```
+
+### Exceptions
+
+
 
 
 ## Examples
@@ -189,7 +283,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
-<!-- CONTACT -->
 ## Contact
 
 Claudi Martinez - claudi.martinez@protonmail.com

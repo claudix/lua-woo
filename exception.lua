@@ -23,14 +23,15 @@
 --
 require('class')
 
+local THROW_FRIEND_KEY = {}
 function throw(exc)
 	assert(is_object(exc, Exception), "Expecting a Exception object")
-	friend(exc, throw).stack_trace = debug.traceback(nil, 2) 
+	friend(exc, THROW_FRIEND_KEY).stack_trace = debug.traceback(nil, 2) 
 	error(exc)
 end
 
 Exception = class("Exception", nil, {
-	friends = {throw},
+	friends = {THROW_FRIEND_KEY},
 	members = {				
 		stack_trace = {
 			private = true,
