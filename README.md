@@ -11,13 +11,8 @@
 
 
 
-<!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/claudix/lua-woo">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">LuaWOO!</h3>
 
   <p align="center">
@@ -251,10 +246,54 @@ end
 
 ### Exceptions
 
+LuaWOO defines two global classes that allow handling exceptions: Exception and UnknownException. The former is the base class of all exceptions that can be defined whereas the latter is a particular exception that handles everything thrown using Lua's *error()* function.
 
+All exceptions have the public methods *get_message()* and *get_stack_trace()*, which return the exception's message and the stack trace, respectively. Instances of UnknownException also contain the public method *get_original_error()*, which returns the original argument passed to *error()*.
+
+#### Throwing and handling exceptions
+To throw an exception, the global **throw()** function is available. This function gets a single argument, which must be an object whose class derives from Exception. 
+Example:
+
+
+	throw(new(Exception, "This is an exception!"))
+
+
+To handle exceptions, the global **try()** function is available. This function only takes one argument (a function containing the code to try) and returns a **try handle**, which allows the user to chain multiple *catch* clauses and a *finally* clause. **To run the try code the handle's *done* method must be eventually called**. The order of *catch* statements determines the order in which the exception is tested in order to be handled.
+
+A *catch* statement is just a call to the try's handle "catch" method, which takes 2 arguments: a exception class, and a function (the exception handler). The exception handler takes only 1 argument: the exception.
+
+	:catch(exception_class, handler)
+
+On the other hand, the *finally* statement is just a call to the try's handle "finally" method,  which takes a single argument: a function to run when either the try succeeds or fails with an exception. This function is not passed any argument.
+
+	:finally(func)
+
+Example:
+
+```
+try(
+	function()
+		-- Some code that eventually calls throw() or error()
+	end
+)
+:catch(MyException, function(exc)
+  print("A MyException occurred")
+end)
+:catch(Exception, function(exc)
+  print("A Exception occurred")
+end)
+:finally(function()
+  print("This is always run")
+end)
+:done() -- Run the try!
+```	
 
 
 ## Examples
+
+See examples [here](https://github.com/claudix/lua-woo/tree/main/examples). To run them, switch to the examples directory and execute: 
+
+	lua <example-script>.lua
 
 
 <!-- ROADMAP -->

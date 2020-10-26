@@ -70,8 +70,7 @@ UnknownException = class("UnknownException", Exception, {
 			value = ''
 		},
 
-		get_error = {
-			protected = true,
+		get_original_error = {
 			method = function(this)
 				return this.original_error
 			end

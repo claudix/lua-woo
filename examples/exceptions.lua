@@ -25,8 +25,7 @@ package.path = package.path .. ';../?.lua'
 require('woo')
 
 local function devil()
-	error("Arrgh!")
-	--throw(new(Exception, "a generic exception"))
+	throw(new(Exception, "a generic exception"))
 end
 
 local function devil2()
