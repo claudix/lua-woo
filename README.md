@@ -341,17 +341,16 @@ To all the people that have contributed to Lua, a simple yet powerful scripting 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/claudix/repo.svg?style=flat-square
+[contributors-shield]: https://img.shields.io/github/contributors/claudix/lua-woo
 [contributors-url]: https://github.com/claudix/lua-woo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/claudix/repo.svg?style=flat-square
+[forks-shield]: https://img.shields.io/github/forks/claudix/lua-woo
 [forks-url]: https://github.com/claudix/lua-woo/network/members
-[stars-shield]: https://img.shields.io/github/stars/claudix/repo.svg?style=flat-square
+[stars-shield]: https://img.shields.io/github/stars/claudix/lua-woo
 [stars-url]: https://github.com/claudix/lua-woo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/claudix/repo.svg?style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/claudix/lua-woo
 [issues-url]: https://github.com/claudix/lua-woo/issues
-[license-shield]: https://img.shields.io/github/license/claudix/repo.svg?style=flat-square
+[license-shield]: https://img.shields.io/github/license/claudix/lua-woo
 [license-url]: https://github.com/claudix/lua-woo/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
 
 
 
