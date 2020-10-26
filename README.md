@@ -37,7 +37,12 @@
 * [Reference](#reference)
   * [class](#class)
   * [new](#new)
-  
+  * [cast](#cast)
+  * [is_object](#is_object)
+  * [is_class](#is_class)
+  * [friend](#friend)
+  * [Exceptions](#exceptions)  
+
 * [Examples](#examples)
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
