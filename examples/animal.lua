@@ -86,4 +86,3 @@ odie:talk()
 cast(garfield, Animal):talk()
 cast(odie, Animal):talk()
 
-

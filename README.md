@@ -16,16 +16,7 @@
   <h3 align="center">LuaWOO!</h3>
 
   <p align="center">
-    A library that provides advanced Object Oriented Programming (OOP) mechanisms for the Lua language.
-    <br />
-    <a href="https://github.com/claudix/lua-woo"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/claudix/lua-woo">View Demo</a>
-    ·
-    <a href="https://github.com/claudix/lua-woo/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/claudix/lua-woo/issues">Request Feature</a>
+    A library that provides advanced Object Oriented Programming (OOP) mechanisms for the Lua language.    
   </p>
 </p>
 
@@ -41,7 +32,7 @@
   * [is_object](#is_object)
   * [is_class](#is_class)
   * [friend](#friend)
-  * [Exceptions](#exceptions)  
+  * [Exceptions](#exceptions)    
 
 * [Examples](#examples)
 * [Roadmap](#roadmap)
@@ -201,6 +192,13 @@ print(c.foo) -- Refers to the effective "foo" member for the class C
 print(C.B.foo) -- Refers to the "foo" member of class B
 print(C.A.foo) -- Refers to the "foo" member of class A 
 ```
+
+#### Built-in members
+All instances have the following built-in members
+
+- **__ref**: a unique identifier for the instance
+- **__class**: the class of the instance
+- **__is_a()**: method that checks if the instance is of the given class (or any of its ancestors)
 
 ### cast
 	cast(instance, class)
