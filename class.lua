@@ -511,7 +511,7 @@ function class(class_name, __parent, class_attrs)
 		else
 			error("Invalid friends attribute")
 		end
-	end
+	end	
 
 	-- Handle to this class. It is a wrapper of the class, and at the end of the class
 	-- initialization is protected with a metatable.
@@ -620,19 +620,7 @@ function class(class_name, __parent, class_attrs)
 			parent[CLASS_DERIVE_KEY](child_class)
 		end
 	end	
-
-	local check_its_me = function(self)
-		assert(self == this_class, "First argument must be the class: " .. class_name)
-	end	
 	
-	this_class.define_member = function(self, name, params)
-		check_its_me(self)
-		if members[name] then
-			error(string.format("Member '%s' already defined in class '%s'", name, class_name))
-		end
-		members[name] = make_member_def(this_class, name, params)
-	end
-
 	-- Inherit from parent class, if any.
 	if parent then
 		parent[CLASS_DERIVE_KEY](this_class)		
@@ -641,7 +629,10 @@ function class(class_name, __parent, class_attrs)
 	-- Create initial members 
 	if type(class_attrs.members) == 'table' then
 		for name, params in pairs(class_attrs.members) do
-			this_class:define_member(name, params)
+			if members[name] then
+				error(string.format("Member '%s' already defined in class '%s'", name, class_name))
+			end
+			members[name] = make_member_def(this_class, name, params)
 		end
 	end
 
